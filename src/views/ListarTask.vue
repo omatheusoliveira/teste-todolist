@@ -34,7 +34,7 @@
               :loading="listTask.carregando"
               :sort-by.sync="sortBy"
               :sort-desc.sync="sortDesc"
-              height="73vh"
+              height="63vh"
               hide-default-footer
               fixed-header
               class="elevation-1"
@@ -79,6 +79,8 @@
                   :items="statusTask"
                   label="Status da Tarefa"
                   v-model="task.done"
+                  item-text="field"
+                  item-value="value"
                   dense
                 ></v-select>
               </v-col>
@@ -146,20 +148,23 @@ export default {
 
     filtro: null,
 
+    statusTask: [
+      { value: 0, field: "Ativo" },
+      { value: 1, field: "Concluído" },
+    ],
+
     statusFiltro: [
       { value: 2, field: "Todos" },
       { value: 0, field: "Ativas" },
       { value: 1, field: "Concluídas" },
     ],
 
-    statusTask: ["Ativa", "Concluída"],
-
     listTask: {
       cabecalho: [
-        { text: "ID ", value: "id", sortable: true },
+        { text: "ID ", value: "id", sortable: false },
         { text: "Nome do responsável", value: "name", sortable: false },
         { text: "Descrição", value: "descricao", sortable: false },
-        { text: "Status", value: "done", sortable: true },
+        { text: "Status", value: "done", sortable: false },
         { text: "", value: "operacoes", sortable: false, align: "end" },
       ],
       items: [],
@@ -186,9 +191,7 @@ export default {
       await axios
         .get(`https://6415ac7e351c4aed490c5c4f.mockapi.io/api/v1/tasks`)
         .then((res) => {
-          console.log(res);
           this.listTask.items = res.data;
-
           this.listTask.porPagina = res.data.length;
           this.listTask.carregando = false;
         })
@@ -200,7 +203,8 @@ export default {
 
     abrirEditarTask(item) {
       this.dialogTask = true;
-      this.task = item;
+      this.task = item ;
+      console.log(item)
     },
 
     editarTask() {
